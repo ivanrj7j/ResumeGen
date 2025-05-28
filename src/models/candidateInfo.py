@@ -1,4 +1,4 @@
-from models import *
+from . import *
 
 class CandidateInfo:
     def __init__(self, contact:Contact, education:list[Education], experience:list[Experience], projects:list[Project], skills:list[Skill]):
