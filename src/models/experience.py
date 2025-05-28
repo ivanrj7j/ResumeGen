@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Literal
 from .skill import Skill
+from .baseModel import BaseModel
 
-class Experience:
+class Experience(BaseModel):
     def __init__(self, title:str, company:str, _type:Literal[0, 1, 2], startDate:float|datetime, endDate:float|datetime, skillsUsed:list[Skill]):
         """
         Initializes an Experience object.

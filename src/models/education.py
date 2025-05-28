@@ -1,6 +1,7 @@
 from datetime import datetime
+from .baseModel import BaseModel
 
-class Education:
+class Education(BaseModel):
     def __init__(self, institute:str, startDate:float|datetime, endDate:float|datetime, score:float, maxScore:float):
         self.institue = institute
         self.startDate = startDate if type(startDate) == datetime else datetime.fromtimestamp(startDate)

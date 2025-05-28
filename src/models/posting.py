@@ -1,4 +1,6 @@
-class Posting:
+from .baseModel import BaseModel
+
+class Posting(BaseModel):
     def __init__(self, title:str, about:str, company:str, companyURL:str):
         self.title = title
         self.about = about

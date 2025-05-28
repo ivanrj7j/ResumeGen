@@ -1,8 +1,9 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from typing import Literal
+from .baseModel import BaseModel
 
-class Skill:
+class Skill(BaseModel):
     def __init__(self, title:str, startDate:float|datetime, proficiency:Literal[0, 1, 2]):
         """
         Initializes a Skill instance for resume generation.
@@ -30,7 +31,7 @@ class Skill:
                 1 - Intermediate
                 2 - Master        
         """
-        startDate = datetime.today().timestamp() - relativedelta(year=experience)
+        startDate = datetime.today() - relativedelta(year=round(experience))
         return cls(title, startDate, proficiency)
 
     @classmethod
