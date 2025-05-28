@@ -6,4 +6,4 @@ class CandidateInfo:
         self.education = education
         self.experience = experience
         self.projects = projects
-        self.skills = skill
+        self.skills = skills
