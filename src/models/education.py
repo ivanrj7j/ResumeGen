@@ -7,3 +7,13 @@ class Education:
         self.endDate = endDate if type(endDate) == datetime else datetime.fromtimestamp(endDate)
         self.score = score
         self.maxScore = maxScore
+
+    @classmethod
+    def fromDict(cls, data:dict):
+        return cls(
+            data["institute"],
+            data["startDate"],
+            data["endDate"],
+            data["score"],
+            data["maxScore"]
+        )

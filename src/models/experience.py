@@ -25,4 +25,16 @@ class Experience:
     @property
     def duration(self):
         end = datetime.today() if self.endDate == -1 else self.endDate
-        return end - self.startDate    
+        return end - self.startDate
+
+    @classmethod
+    def fromDict(cls, data:dict):
+        skills = [Skill.fromDict(s) if isinstance(s, dict) else s for s in data["skillsUsed"]]
+        return cls(
+            data["title"],
+            data["company"],
+            data["type"],
+            data["startDate"],
+            data["endDate"],
+            skills
+        )

@@ -4,3 +4,12 @@ class Posting:
         self.about = about
         self.company = company
         self.companyURL = companyURL
+
+    @classmethod
+    def fromDict(cls, data:dict):
+        return cls(
+            data["title"],
+            data["about"],
+            data["company"],
+            data["companyURL"]
+        )

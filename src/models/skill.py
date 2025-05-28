@@ -33,7 +33,13 @@ class Skill:
         startDate = datetime.today().timestamp() - relativedelta(year=experience)
         return cls(title, startDate, proficiency)
 
-
+    @classmethod
+    def fromDict(cls, data:dict):
+        return cls.fromExperience(
+            data["title"],
+            data["experience"],
+            data["proficiency"]
+        )
 
     @property
     def experience(self):
