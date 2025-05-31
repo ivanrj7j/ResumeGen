@@ -20,7 +20,7 @@ class Skill(BaseModel):
         self.proficiency = proficiency
 
     @classmethod
-    def fromExperience(cls, title:str, experience:float, proficiency:int):
+    def fromExperience(cls, title:str, experience:float, proficiency:Literal[0, 1, 2]):
         """
         Initializes a Skill instance for resume generation.
         Args:
