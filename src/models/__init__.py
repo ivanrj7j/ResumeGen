@@ -1,4 +1,4 @@
-from .contact import Contact
+from .basicinfo import BasicInfo
 from .education import Education
 from .experience import Experience
 from .project import Project

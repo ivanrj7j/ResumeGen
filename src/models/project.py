@@ -1,3 +1,5 @@
+from typing import Any
+
 from .skill import Skill
 from .baseModel import BaseModel
 
@@ -17,3 +19,11 @@ class Project(BaseModel):
             skills,
             data["url"]
         )
+
+    def getDict(self) -> dict[str, Any]:
+        return {
+            "title": self.title,
+            "desc": self.desc,
+            "url": self.url,
+            "skillsUsed": [x.getDict() for x in self.skillsUsed]
+        }

@@ -1,6 +1,6 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from typing import Literal
+from typing import Literal, Any
 from .baseModel import BaseModel
 
 class Skill(BaseModel):
@@ -16,7 +16,7 @@ class Skill(BaseModel):
                 2 - Master        
         """
         self.title = title
-        self.startDate = startDate if type(startDate) == datetime else datetime.fromtimestamp(startDate) 
+        self.startDate = self.parseDate(startDate)
         self.proficiency = proficiency
 
     @classmethod
@@ -45,3 +45,10 @@ class Skill(BaseModel):
     @property
     def experience(self):
         return (datetime.today() - self.startDate).days / 365.25
+
+    def getDict(self) -> dict[str, Any]:
+        return {
+            "title": self.title,
+            "experience": self.experience,
+            "proficiency": self.proficiency,
+        }

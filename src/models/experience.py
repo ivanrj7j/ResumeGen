@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Any
 from .skill import Skill
 from .baseModel import BaseModel
 
@@ -19,8 +19,8 @@ class Experience(BaseModel):
         self.title = title
         self.company = company
         self.type = _type
-        self.startDate = startDate if type(startDate) == datetime else datetime.fromtimestamp(startDate)
-        self.endDate = endDate if type(endDate) == datetime else datetime.fromtimestamp(endDate)
+        self.startDate = self.parseDate(startDate)
+        self.endDate = self.parseDate(endDate)
         self.skillsUsed = skillsUsed
 
     @property
@@ -39,3 +39,13 @@ class Experience(BaseModel):
             data["endDate"],
             skills
         )
+
+    def getDict(self) -> dict[str, Any]:
+        return {
+            "title": self.title,
+            "company": self.company,
+            "type": self.type,
+            "startDate": self.startDate.strftime("%Y-%m-%d"),
+            "endDate": self.endDate.strftime("%Y-%m-%d"),
+            "skillsUsed": [x.getDict() for x in self.skillsUsed]
+        }

@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import unittest
 from datetime import datetime
 
-from src.models import Contact
+from src.models import BasicInfo
 from src.models import Education
 from src.models import Experience
 from src.models import Project
@@ -17,18 +17,19 @@ class TestModels(unittest.TestCase):
     def test_contact_init_and_fromDict(self):
         data = {
             "name": "John Doe",
+            "dob": "2000-01-01",
             "email": "john@example.com",
             "phone": "1234567890",
             "linkedIn": "linkedin.com/in/johndoe",
             "github": "github.com/johndoe"
         }
-        c = Contact(**data)
+        c = BasicInfo(**data)
         self.assertEqual(c.name, data["name"])
         self.assertEqual(c.email, data["email"])
         self.assertEqual(c.phone, data["phone"])
         self.assertEqual(c.linkedIn, data["linkedIn"])
         self.assertEqual(c.github, data["github"])
-        c2 = Contact.fromDict(data)
+        c2 = BasicInfo.fromDict(data)
         self.assertEqual(c2.name, data["name"])
 
     def test_education_init_and_fromDict(self):
@@ -94,7 +95,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(exp2.skillsUsed[0].title, "Python")
 
     def test_candidate_info_init(self):
-        contact = Contact("John Doe", "john@example.com", "1234567890", "linkedin.com/in/johndoe", "github.com/johndoe")
+        contact = BasicInfo("John Doe", "2000-10-25","john@example.com", "1234567890", "linkedin.com/in/johndoe", "github.com/johndoe")
         education = [Education("Test University", datetime.now(), datetime.now(), 8.5, 10.0)]
         experience = [Experience("Developer", "TestCorp", 0, datetime.now(), datetime.now(), [])]
         projects = [Project("ResumeGen", "A resume generator", [], "https://github.com/test/resumegen")]
@@ -105,6 +106,25 @@ class TestModels(unittest.TestCase):
         self.assertEqual(ci.experience[0].title, "Developer")
         self.assertEqual(ci.projects[0].title, "ResumeGen")
         self.assertEqual(ci.skills[0].title, "Python")
+
+    def test_getDict(self):
+        contact = BasicInfo("John Doe", "1969-5-5", "john@example.com", "1234567890", "linkedin.com/in/johndoe", "github.com/johndoe")
+        education = [Education("Test University", datetime.now(), datetime.now(), 8.5, 10.0)]
+        experience = [Experience("Developer", "TestCorp", 0, datetime.now(), datetime.now(), [])]
+        projects = [Project("ResumeGen", "A resume generator", [], "https://github.com/test/resumegen")]
+        skills = [Skill("Python", datetime.now(), 2)]
+        ci = CandidateInfo(contact, education, experience, projects, skills)
+        result = ci.getDict()
+
+    def test_getJSON(self):
+
+        contact = BasicInfo("John Doe", "2006-5-5", "john@example.com", "1234567890", "linkedin.com/in/johndoe", "github.com/johndoe")
+        education = [Education("Test University", datetime.now(), datetime.now(), 8.5, 10.0)]
+        experience = [Experience("Developer", "TestCorp", 0, datetime.now(), datetime.now(), [])]
+        projects = [Project("ResumeGen", "A resume generator", [], "https://github.com/test/resumegen")]
+        skills = [Skill("Python", datetime.now(), 2)]
+        ci = CandidateInfo(contact, education, experience, projects, skills)
+        ci.getJSON()
 
 if __name__ == "__main__":
     unittest.main()
