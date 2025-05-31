@@ -10,8 +10,13 @@ from .skill import Skill
 class CandidateInfo(BaseModel):
     @classmethod
     def fromDict(cls, data: dict[str, Any]):
-        # TODO: Create a fromDICT method
-        pass
+        contact = BasicInfo.fromDict(data["contact"])
+        education = [Education.fromDict(x) for x in data["education"]]
+        experience = [Experience.fromDict(x) for x in data["experience"]]
+        projects = [Project.fromDict(x) for x in data["projects"]]
+        skills = [Skill.fromDict(x) for x in data["skills"]]    
+
+        return cls(contact, education, experience, projects, skills)   
 
     def __init__(self, contact:BasicInfo, education:list[Education], experience:list[Experience], projects:list[Project], skills:list[Skill]):
         self.contact = contact 

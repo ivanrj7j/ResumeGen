@@ -35,6 +35,8 @@ class BaseModel(ABC):
 
     def parseDate(self, time:str|float|datetime):
         if isinstance(time, str):
+            if time == "":
+                return None
             return datetime.strptime(time, "%Y-%m-%d")
         elif isinstance(time, float):
             return datetime.fromtimestamp(time)
@@ -42,3 +44,7 @@ class BaseModel(ABC):
             return time
         else:
             raise TypeError("The given format for time is incompatible. Use a float/string/datetime object")
+        
+    @classmethod
+    def fromDictList(cls, data:list[dict]):
+        return [cls.fromDict(x) for x in data]

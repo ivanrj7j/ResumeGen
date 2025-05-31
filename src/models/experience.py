@@ -30,7 +30,8 @@ class Experience(BaseModel):
 
     @classmethod
     def fromDict(cls, data:dict):
-        skills = [Skill.fromDict(s) if isinstance(s, dict) else s for s in data["skillsUsed"]]
+        skills = Skill.fromDictList(data["skillsUsed"])
+
         return cls(
             data["title"],
             data["company"],
