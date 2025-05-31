@@ -174,3 +174,6 @@ cython_debug/
 .pypirc
 
 .idea
+src/posting/test.html
+src/posting/test.ipynb
+tester.py

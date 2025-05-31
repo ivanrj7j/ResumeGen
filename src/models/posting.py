@@ -15,3 +15,11 @@ class Posting(BaseModel):
             data["company"],
             data["companyURL"]
         )
+    
+    def getDict(self):
+        return {
+            "title": self.title,
+            "about": self.about,
+            "company": self.company,
+            "companyURL": self.companyURL
+        }
