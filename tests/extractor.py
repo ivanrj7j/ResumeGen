@@ -4,7 +4,6 @@ from src.models import CandidateInfo
 from dotenv import load_dotenv
 import os
 import base64
-import json
 
 load_dotenv()
 
