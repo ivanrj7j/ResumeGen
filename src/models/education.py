@@ -24,8 +24,8 @@ class Education(BaseModel):
     def getDict(self) -> dict[str, Any]:
         return {
             "institute": self.institue,
-            "startDate": self.startDate.strftime("%Y-%m-%d"),
-            "endDate": self.endDate.strftime("%Y-%m-%d"),
+            "startDate": self.stringifyDate(self.startDate),
+            "endDate": self.stringifyDate(self.endDate),
             "score": self.score,
             "maxScore": self.maxScore
         }

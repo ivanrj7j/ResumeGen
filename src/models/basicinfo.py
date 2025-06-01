@@ -18,7 +18,7 @@ class BasicInfo(BaseModel):
     def getDict(self) -> dict[str, Any]:
         return {
             "name": self.name,
-            "dob": self.dob.strftime("%Y-%m-%d"),
+            "dob": self.stringifyDate(self.dob),
             "email": self.email,
             "phone": self.phone,
             "linkedIn": self.linkedIn,

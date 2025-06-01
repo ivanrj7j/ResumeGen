@@ -44,7 +44,10 @@ class Skill(BaseModel):
 
     @property
     def experience(self):
-        return (datetime.today() - self.startDate).days / 365.25
+        try:
+            return (datetime.today() - self.startDate).days / 365.25
+        except TypeError:
+            return ""
 
     def getDict(self) -> dict[str, Any]:
         return {

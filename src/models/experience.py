@@ -46,7 +46,7 @@ class Experience(BaseModel):
             "title": self.title,
             "company": self.company,
             "type": self.type,
-            "startDate": self.startDate.strftime("%Y-%m-%d"),
-            "endDate": self.endDate.strftime("%Y-%m-%d"),
+            "startDate": self.stringifyDate(self.startDate),
+            "endDate": self.stringifyDate(self.endDate),
             "skillsUsed": [x.getDict() for x in self.skillsUsed]
         }

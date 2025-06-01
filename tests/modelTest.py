@@ -108,6 +108,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(ci.skills[0].title, "Python")
 
     def test_getDict(self):
+        # Complete data
         contact = BasicInfo("John Doe", "1969-5-5", "john@example.com", "1234567890", "linkedin.com/in/johndoe", "github.com/johndoe")
         education = [Education("Test University", datetime.now(), datetime.now(), 8.5, 10.0)]
         experience = [Experience("Developer", "TestCorp", 0, datetime.now(), datetime.now(), [])]
@@ -115,9 +116,23 @@ class TestModels(unittest.TestCase):
         skills = [Skill("Python", datetime.now(), 2)]
         ci = CandidateInfo(contact, education, experience, projects, skills)
         result = ci.getDict()
+        self.assertEqual(result["contact"]["name"], "John Doe")
+        # Incomplete data
+        contact_incomplete = BasicInfo("", "", "", "", None, None)
+        education_incomplete = [Education("", "", "", None, None)]
+        experience_incomplete = [Experience("", "", 0, "", "", [])]
+        projects_incomplete = [Project("", "", [], "")]
+        skills_incomplete = [Skill("", "", 0)]
+        ci_incomplete = CandidateInfo(contact_incomplete, education_incomplete, experience_incomplete, projects_incomplete, skills_incomplete)
+        result_incomplete = ci_incomplete.getDict()
+        self.assertEqual(result_incomplete["contact"]["name"], "")
+        self.assertEqual(result_incomplete["education"][0]["institute"], "")
+        self.assertEqual(result_incomplete["experience"][0]["title"], "")
+        self.assertEqual(result_incomplete["projects"][0]["title"], "")
+        self.assertEqual(result_incomplete["skills"][0]["title"], "")
 
     def test_getJSON(self):
-
+        # Complete data
         contact = BasicInfo("John Doe", "2006-5-5", "john@example.com", "1234567890", "linkedin.com/in/johndoe", "github.com/johndoe")
         education = [Education("Test University", datetime.now(), datetime.now(), 8.5, 10.0)]
         experience = [Experience("Developer", "TestCorp", 0, datetime.now(), datetime.now(), [])]
@@ -125,6 +140,113 @@ class TestModels(unittest.TestCase):
         skills = [Skill("Python", datetime.now(), 2)]
         ci = CandidateInfo(contact, education, experience, projects, skills)
         ci.getJSON()
+        # Incomplete data
+        contact_incomplete = BasicInfo("", "", "", "", None, None)
+        education_incomplete = [Education("", "", "", None, None)]
+        experience_incomplete = [Experience("", "", 0, "", "", [])]
+        projects_incomplete = [Project("", "", [], "")]
+        skills_incomplete = [Skill("", "", 0)]
+        ci_incomplete = CandidateInfo(contact_incomplete, education_incomplete, experience_incomplete, projects_incomplete, skills_incomplete)
+        ci_incomplete.getJSON()
+
+    def test_incomplete_basicinfo(self):
+        incomplete_data = {
+            "name": "",
+            "dob": "",
+            "email": "john@example.com",
+            "phone": "",
+            "linkedIn": None,
+            "github": None
+        }
+        c = BasicInfo.fromDict(incomplete_data)
+        self.assertEqual(c.name, "")
+        self.assertEqual(c.dob, None)
+        self.assertEqual(c.phone, "")
+        self.assertEqual(c.linkedIn, None)
+        self.assertEqual(c.github, None)
+        d = c.getDict()
+        self.assertEqual(d["name"], "")
+        self.assertEqual(d["dob"], None)
+
+    def test_incomplete_education(self):
+        incomplete_data = {
+            "institute": "",
+            "startDate": "",
+            "endDate": "",
+            "score": None,
+            "maxScore": None
+        }
+        e = Education.fromDict(incomplete_data)
+        self.assertEqual(e.institue, "")
+        self.assertEqual(e.startDate, None)
+        self.assertEqual(e.endDate, None)
+        self.assertEqual(e.score, None)
+        self.assertEqual(e.maxScore, None)
+        d = e.getDict()
+        self.assertEqual(d["institute"], "")
+        self.assertEqual(d["startDate"], None)
+
+    def test_incomplete_skill(self):
+        incomplete_data = {
+            "title": "",
+            "experience": 0.0,
+            "proficiency": 0
+        }
+        s = Skill.fromDict(incomplete_data)
+        self.assertEqual(s.title, "")
+        self.assertEqual(s.proficiency, 0)
+        d = s.getDict()
+        self.assertEqual(d["title"], "")
+
+    def test_incomplete_project(self):
+        incomplete_data = {
+            "title": "",
+            "desc": "",
+            "skillsUsed": [],
+            "url": ""
+        }
+        p = Project.fromDict(incomplete_data)
+        self.assertEqual(p.title, "")
+        self.assertEqual(p.desc, "")
+        self.assertEqual(p.url, "")
+        self.assertEqual(p.skillsUsed, [])
+        d = p.getDict()
+        self.assertEqual(d["title"], "")
+        self.assertEqual(d["skillsUsed"], [])
+
+    def test_incomplete_experience(self):
+        incomplete_data = {
+            "title": "",
+            "company": "",
+            "type": 0,
+            "startDate": "",
+            "endDate": "",
+            "skillsUsed": []
+        }
+        e = Experience.fromDict(incomplete_data)
+        self.assertEqual(e.title, "")
+        self.assertEqual(e.company, "")
+        self.assertEqual(e.type, 0)
+        self.assertEqual(e.startDate, None)
+        self.assertEqual(e.endDate, None)
+        self.assertEqual(e.skillsUsed, [])
+        d = e.getDict()
+        self.assertEqual(d["title"], "")
+        self.assertEqual(d["skillsUsed"], [])
+
+    def test_incomplete_candidate_info(self):
+        contact = BasicInfo("", "", "", "", None, None)
+        education = [Education("", "", "", None, None)]
+        experience = [Experience("", "", 0, "", "", [])]
+        projects = [Project("", "", [], "")]
+        skills = [Skill("", "", 0)]
+        ci = CandidateInfo(contact, education, experience, projects, skills)
+        d = ci.getDict()
+        self.assertEqual(d["contact"]["name"], "")
+        self.assertEqual(d["education"][0]["institute"], "")
+        self.assertEqual(d["experience"][0]["title"], "")
+        self.assertEqual(d["projects"][0]["title"], "")
+        self.assertEqual(d["skills"][0]["title"], "")
 
 if __name__ == "__main__":
     unittest.main()
