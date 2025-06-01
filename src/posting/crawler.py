@@ -32,7 +32,8 @@ class Crawler:
         return self
     
     def __next__(self):
-        self.updateURL()
         if self.url is None:
             raise StopIteration
-        return self.parse()
+        result = self.parse()
+        self.updateURL()
+        return result

@@ -2,6 +2,7 @@ import unittest
 from queue import Queue
 from src.posting.crawler import Crawler
 from src.models.posting import Posting
+from string import ascii_lowercase
 
 class DummyCrawler(Crawler):
     def parse(self) -> Posting:
@@ -40,6 +41,15 @@ class TestCrawler(unittest.TestCase):
         crawler = DummyCrawler(["http://a.com"])
         posting = crawler.parse()
         self.assertIsInstance(posting, Posting)
+
+    def test_crawl_length(self):
+        inp = [f"http://{x}.com" for x in ascii_lowercase]
+        crawler = DummyCrawler(inp)
+        totalCrawls = 0
+        for x in crawler:
+            totalCrawls += 1
+
+        self.assertEqual(totalCrawls, len(inp))
 
 class TestLinkedinCrawler(unittest.TestCase):
     def test_parse_returns_posting(self):
