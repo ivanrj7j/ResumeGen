@@ -1,0 +1,126 @@
+{
+    "contact": {
+        "name": "IVAN RAPHEL JAISON",
+        "dob": null,
+        "email": "ivanrj7j@gmail.com",
+        "phone": "+919207906542",
+        "linkedIn": "",
+        "github": "https://github.com/ivanrj7j"
+    },
+    "education": [
+        {
+            "institute": "Mar Athanasius College of Engineering, Kothamangalam",
+            "startDate": null,
+            "endDate": null,
+            "score": "",
+            "maxScore": ""
+        },
+        {
+            "institute": "St. Joseph's HSS, Vayattuparamba",
+            "startDate": null,
+            "endDate": null,
+            "score": "99.25%",
+            "maxScore": ""
+        }
+    ],
+    "experience": [
+        {
+            "title": "WEB DEV",
+            "company": "FIVERR",
+            "type": "0",
+            "startDate": "2020-01-01",
+            "endDate": null,
+            "skillsUsed": []
+        }
+    ],
+    "projects": [
+        {
+            "title": "OPENCV FONT RENDERER",
+            "desc": "Used to render custom text with OpenCV",
+            "url": "PyPl",
+            "skillsUsed": [
+                {
+                    "title": "OpenCV",
+                    "experience": 2022.95961670089,
+                    "proficiency": "2"
+                }
+            ]
+        },
+        {
+            "title": "PIX2PIX BASED IMAGE COLORIZER",
+            "desc": "Implemented Pix2Pix Architecture from scratch to train an image colorizer model",
+            "url": "",
+            "skillsUsed": [
+                {
+                    "title": "Python",
+                    "experience": 2022.95961670089,
+                    "proficiency": "2"
+                },
+                {
+                    "title": "Pytorch",
+                    "experience": 2022.95961670089,
+                    "proficiency": "2"
+                }
+            ]
+        },
+        {
+            "title": "REDDIT SUICIDE PREVENTION BOT",
+            "desc": "Developed a bot that scrapes suicidal posts on reddit and flags them using AI",
+            "url": "",
+            "skillsUsed": [
+                {
+                    "title": "Python",
+                    "experience": 2022.95961670089,
+                    "proficiency": "2"
+                },
+                {
+                    "title": "HTML and CSS",
+                    "experience": 2023.958932238193,
+                    "proficiency": "1"
+                }
+            ]
+        }
+    ],
+    "skills": [
+        {
+            "title": "Python",
+            "experience": 2022.95961670089,
+            "proficiency": "2"
+        },
+        {
+            "title": "JavaScript",
+            "experience": 2023.958932238193,
+            "proficiency": "1"
+        },
+        {
+            "title": "Pytorch",
+            "experience": 2022.95961670089,
+            "proficiency": "2"
+        },
+        {
+            "title": "Svelte",
+            "experience": 0.0,
+            "proficiency": "1"
+        },
+        {
+            "title": "Tensorflow",
+            "experience": 2022.95961670089,
+            "proficiency": "2"
+        },
+        {
+            "title": "HTML and CSS",
+            "experience": 2023.958932238193,
+            "proficiency": "1"
+        },
+        {
+            "title": "Flask",
+            "experience": 2023.958932238193,
+            "proficiency": "1"
+        },
+        {
+            "title": "OpenCV",
+            "experience": 2022.95961670089,
+            "proficiency": "2"
+        }
+    ]
+}
