@@ -1,26 +1,14 @@
 from typing import Any
 from .schema import *
-from google import genai
 from google.genai import types
+from ..baseAI import BaseAI
 import base64
 
 
-class ResumeExtractor:
+class ResumeExtractor(BaseAI):
     def __init__(self, geminiKEY: str, prompt: str, schema: dict[str, Any] = schema,
                  requiredFields: list[str] = requiredFields, model: str = "gemini-2.0-flash-lite") -> None:
-        self.client = genai.Client(api_key=geminiKEY)
-        self.model = model
-        self.config = types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=genai.types.Schema(
-                type=genai.types.Type.OBJECT,
-                required=requiredFields,
-                properties=schema,
-            ),
-            system_instruction=[
-                types.Part.from_text(text=prompt),
-            ],
-        )
+        super().__init__(geminiKEY, prompt, schema, requiredFields, model)
 
     def __extract(self, contents:list[types.Content]) -> str | None:
         return self.client.models.generate_content(
