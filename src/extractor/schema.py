@@ -1,5 +1,10 @@
-from google.genai import types
 from google import genai
+
+"""
+Used to store schema for the resume extractor.
+
+This scema is used as the default.
+"""
 
 schema = {
     "contact": genai.types.Schema(
