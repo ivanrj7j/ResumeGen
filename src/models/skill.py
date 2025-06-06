@@ -31,7 +31,7 @@ class Skill(BaseModel):
                 1 - Intermediate
                 2 - Master        
         """
-        startDate = datetime.today() - relativedelta(year=round(experience))
+        startDate = datetime.today() - relativedelta(years=round(experience))
         return cls(title, startDate, proficiency)
 
     @classmethod
@@ -45,9 +45,10 @@ class Skill(BaseModel):
     @property
     def experience(self):
         try:
-            return (datetime.today() - self.startDate).days / 365.25
-        except TypeError:
-            return ""
+            exp = (datetime.today() - self.startDate).days / 365.25
+            return max(0, exp)
+        except (TypeError, AttributeError):
+            return 0
 
     def getDict(self) -> dict[str, Any]:
         return {

@@ -42,10 +42,10 @@ class TestModels(unittest.TestCase):
             "maxScore": 10.0
         }
         e = Education(**data)
-        self.assertEqual(e.institue, data["institute"])
+        self.assertEqual(e.institute, data["institute"])
         self.assertAlmostEqual(e.score, data["score"])
         e2 = Education.fromDict(data)
-        self.assertEqual(e2.institue, data["institute"])
+        self.assertEqual(e2.institute, data["institute"])
 
     def test_skill_init_and_fromDict(self):
         now = datetime.now().timestamp()
@@ -102,7 +102,7 @@ class TestModels(unittest.TestCase):
         skills = [Skill("Python", datetime.now(), 2)]
         ci = CandidateInfo(contact, education, experience, projects, skills)
         self.assertEqual(ci.contact.name, "John Doe")
-        self.assertEqual(ci.education[0].institue, "Test University")
+        self.assertEqual(ci.education[0].institute, "Test University")
         self.assertEqual(ci.experience[0].title, "Developer")
         self.assertEqual(ci.projects[0].title, "ResumeGen")
         self.assertEqual(ci.skills[0].title, "Python")
@@ -177,7 +177,7 @@ class TestModels(unittest.TestCase):
             "maxScore": None
         }
         e = Education.fromDict(incomplete_data)
-        self.assertEqual(e.institue, "")
+        self.assertEqual(e.institute, "")
         self.assertEqual(e.startDate, None)
         self.assertEqual(e.endDate, None)
         self.assertEqual(e.score, None)
