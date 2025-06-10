@@ -3,6 +3,7 @@ import subprocess
 from uuid import uuid4 as uuid
 import shutil
 from logging import Logger
+import tempfile
 
 class Renderer:
     def __init__(self, logger:Logger|None=None):
@@ -108,3 +109,30 @@ class Renderer:
         if "." not in preffered:
             return preffered + ".pdf"
         return preffered
+    
+    def renderFromSourceCode(self, src:str, path:str=".", customName:str=""):
+        """
+        Renders a document from the provided source code.
+        Args:
+            src (str): The source code to render from.
+            path (str, optional): The directory path where the rendered document will be saved. Defaults to the current directory ".".
+            customName (str, optional): Custom name for the rendered document. If not provided, a default name will be used.
+        Returns:
+            None
+        Raises:
+            Exception: If rendering fails due to invalid source code or file system errors.
+        """
+        
+        tempFileName = str(uuid())+".tex"
+        tempFilePath = os.path.join(tempfile.gettempdir(), tempFileName)
+
+        if os.path.exists(tempFilePath):
+            self.renderFromSourceCode(src, path, customName)
+            return
+        
+        with open(tempFilePath, "w", encoding='utf-8') as f:
+            f.write(src)
+
+        self.renderPDF(tempFilePath, path, customName)
+
+        os.remove(tempFilePath)
