@@ -38,7 +38,8 @@ class LatexEditor(BaseAI):
             model = self.model,
             contents=inp,
             config = self.config
-        ).text
+        ).text.replace("\\\\", "\\")
+
 
         texCode  = re.sub(r'(?<!\\)\\n(?![a-zA-Z])', '\n', texCode)
 
