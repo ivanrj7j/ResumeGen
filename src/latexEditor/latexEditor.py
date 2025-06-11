@@ -43,7 +43,4 @@ class LatexEditor(BaseAI):
 
         texCode  = re.sub(r'(?<!\\)\\n(?![a-zA-Z])', '\n', texCode)
 
-        with open("tempFile.tex", "w", encoding='utf-8') as f:
-            f.write(texCode)
-
         self.renderer.renderFromSourceCode(texCode, path, customName)
