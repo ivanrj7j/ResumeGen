@@ -40,6 +40,12 @@ class LatexEditor(BaseAI):
             config = self.config
         ).text.replace("\\\\", "\\")
 
+        if texCode.startswith('"'):
+            texCode = texCode[1:]
+
+        if texCode.endswith('"'):
+            texCode = texCode[:-1]
+
 
         texCode  = re.sub(r'(?<!\\)\\n(?![a-zA-Z])', '\n', texCode)
 
