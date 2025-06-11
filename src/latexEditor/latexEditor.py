@@ -48,5 +48,6 @@ class LatexEditor(BaseAI):
 
 
         texCode  = re.sub(r'(?<!\\)\\n(?![a-zA-Z])', '\n', texCode)
+        texCode = re.sub(r'\\t(?![a-zA-Z])', '\t', texCode)
 
         self.renderer.renderFromSourceCode(texCode, path, customName)
