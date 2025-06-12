@@ -6,7 +6,6 @@ from .education import Education
 from .experience import Experience
 from .project import Project
 from .skill import Skill
-from ..githubExtractor import GithubExtractor
 
 class CandidateInfo(BaseModel):
     @classmethod
@@ -19,7 +18,7 @@ class CandidateInfo(BaseModel):
 
         return cls(contact, education, experience, projects, skills)   
 
-    def __init__(self, contact:BasicInfo, education:list[Education], experience:list[Experience], projects:list[Project], skills:list[Skill], githubExtractor:GithubExtractor=None):
+    def __init__(self, contact:BasicInfo, education:list[Education], experience:list[Experience], projects:list[Project], skills:list[Skill], githubExtractor=None):
         self.contact = contact 
         self.education = education
         self.experience = experience
@@ -37,7 +36,7 @@ class CandidateInfo(BaseModel):
             "skills": [x.getDict() for x in self.skills]
         }
     
-    def extractFromGithub(self, githubExtractor:GithubExtractor):
+    def extractFromGithub(self, githubExtractor):
         if githubExtractor is not None and self.contact.github is not None:
             try:
                 projects = githubExtractor.getUserProjects(self.contact.github)
