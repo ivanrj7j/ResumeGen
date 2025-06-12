@@ -1,5 +1,5 @@
 from github import Github
-from github.Auth import Auth
+from github.Auth import Token
 from ..models.project import Project
 
 class GithubExtractor:
@@ -12,7 +12,7 @@ class GithubExtractor:
             client (Github): An authenticated GitHub client instance.
         """
 
-        self.client = Github(apiKey)
+        self.client = Github(Token(apiKey))
         
     def getProjectDetail(self, projectURL:str):
         """
@@ -34,7 +34,7 @@ class GithubExtractor:
     def getUserProjects(self, userName:str):
         if userName.startswith("https://github.com/"):
             userName = userName.replace("https://github.com/", "").strip()
-            
+
         user = self.client.get_user(userName)
         repositories = user.get_repos()
         for repo in repositories:
