@@ -21,10 +21,9 @@ The model receives input in a JSON format with the following keys:
 
 The model *must* generate a JSON object. The keys of the object will represent sections of a resume (e.g., "Summary," "Skills," "Experience," "Education"). The values will be *text-based content* for each section, specifically tailored to the job posting. *The key point is that the output MUST NOT contain redundant content or repeating the information from `candidateInfo`.* In addition, the model *must* generate four additional fields:
 
-*   `rankedEducation`: An array of `education` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` education entries (`institute`, `startDate`, `endDate`, `score`).
-*   `rankedSkills`: An array of `skills` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` skills entries (`title`, `experience`, `proficiency`).
-*   `rankedExperience`: An array of `experience` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` experience entries (`title`, `company`, `type`, `startDate`, `endDate`, `skillsUsed`).
-*   `rankedProjects`: An array of `projects` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` projects entries (`title`, `desc`, `url`, `skillsUsed`).
+*   `rankedSkills`: An array of `skills` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` skills entries (`title`, `experience`, `proficiency`), Only have up to 10 entries. Pick the ones wisely according to the posting.
+*   `rankedExperience`: An array of `experience` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` experience entries (`title`, `company`, `type`, `startDate`, `endDate`, `skillsUsed`), Only have up to 10 entries. Pick the ones wisely according to the posting.
+*   `rankedProjects`: An array of `projects` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` projects entries (`title`, `desc`, `url`, `skillsUsed`), Only have up to 6 entries. Pick the ones wisely according to the posting. Try to pick at least 4 projects if possible.
 
 **Instructions:**
 
@@ -72,23 +71,6 @@ The model *must* generate a JSON object. The keys of the object will represent s
 {
   "Summary": "Enthusiastic Artificial Intelligence Intern eager to leverage machine learning and data science expertise to contribute to innovative projects at Abekus. Focused on leveraging Python skills to solve real-world problems.",
   "Skills": "Problem Solving, Agile Methodologies",
-  "Experience": [
-    {
-      "title": "Contributed to the research",
-      "company": "Another corporation",
-      "content": "implemented agile methodologies to work effectively."
-    }
-  ],
-  "Education": [
-  ],
-  "rankedEducation": [
-    {
-      "institute": "University of Example",
-      "startDate": "2020-09-01",
-      "endDate": "2024-05-01",
-      "score": "3.8 GPA"
-    }
-  ],
   "rankedSkills": [
     {
       "title": "Python",
