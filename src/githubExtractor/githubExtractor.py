@@ -12,7 +12,7 @@ class GithubExtractor:
             client (Github): An authenticated GitHub client instance.
         """
 
-        self.client = Github(Token(apiKey))
+        self.client = Github(auth=Token(apiKey))
         
     def getProjectDetail(self, projectURL:str):
         """
