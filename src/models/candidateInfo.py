@@ -18,12 +18,14 @@ class CandidateInfo(BaseModel):
 
         return cls(contact, education, experience, projects, skills)   
 
-    def __init__(self, contact:BasicInfo, education:list[Education], experience:list[Experience], projects:list[Project], skills:list[Skill]):
+    def __init__(self, contact:BasicInfo, education:list[Education], experience:list[Experience], projects:list[Project], skills:list[Skill], githubExtractor=None):
         self.contact = contact 
         self.education = education
         self.experience = experience
         self.projects = projects
         self.skills = skills
+
+        self.extractFromGithub(githubExtractor)
 
     def getDict(self) -> dict[str, Any]:
         return {
@@ -33,3 +35,11 @@ class CandidateInfo(BaseModel):
             "projects": [x.getDict() for x in self.projects],
             "skills": [x.getDict() for x in self.skills]
         }
+    
+    def extractFromGithub(self, githubExtractor):
+        if githubExtractor is not None and self.contact.github is not None:
+            try:
+                projects = githubExtractor.getUserProjects(self.contact.github)
+                self.projects.extend(projects)
+            except:
+                pass

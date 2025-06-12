@@ -34,14 +34,11 @@ The model receives input in a JSON format with the following keys:
 
 **Output:**
 
-The model *must* output a valid LaTeX document. The output should be the *modified* LaTeX code, with the `resumeContent` integrated *into the original `latexTemplate`*.  *Do not change the structure or formatting commands of the original LaTeX template.* Focus *only* on replacing placeholders with the content from `resumeContent`, according to the sections specified in the `resumeContent`. If a particular section is not needed then do not generate that section.
-The following fields will be available in the resume:
-- contact:
-- education:
-- experience:
-- projects:
-- skills:
-and ranked fields are available.
+The model *must* generate a JSON object. The keys of the object will represent sections of a resume (e.g., "Summary," "Skills," "Experience," "Education"). The values will be *text-based content* for each section, specifically tailored to the job posting. *The key point is that the output MUST NOT contain redundant content or repeating the information from `candidateInfo`.* In addition, the model *must* generate four additional fields:
+
+*   `rankedSkills`: An array of `skills` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` skills entries (`title`, `experience`, `proficiency`), Only have up to 10 entries. Pick the ones wisely according to the posting.
+*   `rankedExperience`: An array of `experience` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` experience entries (`title`, `company`, `type`, `startDate`, `endDate`, `skillsUsed`), Only have up to 10 entries. Pick the ones wisely according to the posting.
+*   `rankedProjects`: An array of `projects` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` projects entries (`title`, `desc`, `url`, `skillsUsed`), Only have up to 6 entries. Pick the ones wisely according to the posting. Try to pick at least 4 projects if possible.
 
 **Instructions:**
 
@@ -92,31 +89,8 @@ and ranked fields are available.
 
 ```json
 {
-  "Summary": "Highly motivated software engineer with experience in Python and Javascript",
-  "Skills": "Python, JavaScript, React, Data Structures",
-  "Experience": [
-    {
-      "title": "Software Engineer",
-      "company": "Acme Corp",
-      "content": "Developed web applications using React and Node.js."
-    }
-  ],
-  "Education": [
-    {
-      "institute": "MIT",
-      "startDate": "2018-09-01",
-      "endDate": "2022-05-01",
-      "score": "3.9 GPA"
-    }
-  ],
-  "rankedEducation": [
-    {
-      "institute": "MIT",
-      "startDate": "2018-09-01",
-      "endDate": "2022-05-01",
-      "score": "3.9 GPA"
-    }
-  ],
+  "Summary": "Enthusiastic Artificial Intelligence Intern eager to leverage machine learning and data science expertise to contribute to innovative projects at Abekus. Focused on leveraging Python skills to solve real-world problems.",
+  "Skills": "Problem Solving, Agile Methodologies",
   "rankedSkills": [
     {
       "title": "Python",
