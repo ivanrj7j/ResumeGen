@@ -3,7 +3,6 @@ import subprocess
 from uuid import uuid4 as uuid
 import shutil
 from logging import Logger
-import tempfile
 
 class Renderer:
     def __init__(self, logger:Logger|None=None):
@@ -115,7 +114,7 @@ class Renderer:
         Renders a document from the provided source code.
         Args:
             src (str): The source code to render from.
-            path (str, optional): The directory path where the rendered document will be saved. Defaults to the current directory ".".
+            path (str, optional): The directory path where the rendered document will be saved. If the latex file has dependant files, the path must specify that. Defaults to the current directory ".".
             customName (str, optional): Custom name for the rendered document. If not provided, a default name will be used.
         Returns:
             None
@@ -124,15 +123,20 @@ class Renderer:
         """
         
         tempFileName = str(uuid())+".tex"
-        tempFilePath = os.path.join(tempfile.gettempdir(), tempFileName)
+        tempFilePath = os.path.join(path, tempFileName)
 
-        if os.path.exists(tempFilePath):
+        currentPath = os.getcwd()
+
+        os.chdir(path)
+
+        if os.path.exists(tempFileName):
             self.renderFromSourceCode(src, path, customName)
             return
         
-        with open(tempFilePath, "w", encoding='utf-8') as f:
+        with open(tempFileName, "w", encoding='utf-8') as f:
             f.write(src)
 
-        self.renderPDF(tempFilePath, path, customName)
+        self.renderPDF(tempFileName, ".", customName)
 
-        os.remove(tempFilePath)
+        os.remove(tempFileName)
+        os.chdir(currentPath)
