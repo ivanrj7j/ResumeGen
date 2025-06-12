@@ -32,6 +32,9 @@ class GithubExtractor:
         return Project(repository.name, repository.description, [], f"https://github.com/{projectURL}")
     
     def getUserProjects(self, userName:str):
+        if userName.startswith("https://github.com/"):
+            userName = userName.replace("https://github.com/", "").strip()
+            
         user = self.client.get_user(userName)
         repositories = user.get_repos()
         for repo in repositories:
