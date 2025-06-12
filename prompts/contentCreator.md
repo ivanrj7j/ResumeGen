@@ -23,7 +23,7 @@ The model *must* generate a JSON object. The keys of the object will represent s
 
 *   `rankedSkills`: An array of `skills` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` skills entries (`title`, `experience`, `proficiency`), Only have up to 10 entries. Pick the ones wisely according to the posting.
 *   `rankedExperience`: An array of `experience` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` experience entries (`title`, `company`, `type`, `startDate`, `endDate`, `skillsUsed`), Only have up to 10 entries. Pick the ones wisely according to the posting.
-*   `rankedProjects`: An array of `projects` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` projects entries (`title`, `desc`, `url`, `skillsUsed`), Only have up to 6 entries. Pick the ones wisely according to the posting.
+*   `rankedProjects`: An array of `projects` objects from `candidateInfo`, ranked in order of relevance to the job posting (most relevant first). Each object contains the same keys as those found in the `candidateInfo` projects entries (`title`, `desc`, `url`, `skillsUsed`), Only have up to 6 entries. Pick the ones wisely according to the posting. Try to pick at least 4 projects if possible.
 
 **Instructions:**
 
