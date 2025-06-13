@@ -95,8 +95,12 @@ if __name__ == "__main__":
 \end{document}
 """
 
-    temp = LatexTemplate.fromFile("ignoreDir/sample/template.jinja")
+    temp = LatexTemplate.fromFile("ignoreDir/test1Custom.jinja")
     # print(temp.content.replace("{{newLine}}", '\n'))
+
+    with open("tempX.json", encoding="utf-8") as f:
+        userData = json.load(f)
+
     with open("tempZ.json", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -124,9 +128,13 @@ if __name__ == "__main__":
 
             
 
-    with open("tempA.tex", "w", encoding="utf-8") as f:
+    with open("ignoreDir/test1Custom.tex", "w", encoding="utf-8") as f:
         f.write(temp.render(**data))
 
-    # with open("tempY.json", "w", encoding="utf-8") as f:
-    #     c = json.dumps(temp.getModelInput(), indent=4)
-    #     f.write(c)
+
+
+    with open("tempY.json", "w", encoding="utf-8") as f:
+        printData = temp.getModelInput()
+        printData["data"] = userData
+        c = json.dumps(printData, indent=4)
+        f.write(c)

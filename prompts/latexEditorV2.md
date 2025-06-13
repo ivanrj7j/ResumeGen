@@ -12,19 +12,22 @@ Your goal is to meticulously analyze the `template` and `instances` schema, and 
 1.  **`template` (String):**
     *   A Jinja-enhanced LaTeX template string.
     *   Placeholders will be like `{{ title[0] }}`, `{{ shortText[1] }}`, `{{ number[0] }}`, or loops like `{% for item in misc %}{{ item }}{% endfor %}`.
-    *   The `{{newLine}}` token is used in the template for LaTeX newlines.
+    *   The `{{newLine}}` token **might be used within the input `template` string itself** as a substitute for actual newline characters (`\n`) for structuring the template code (e.g., `\section{...}{{newLine}}\subsection{...}`). Your output data strings should NOT use this token.
 
 2.  **`instances` (JSON Object):**
     *   Defines the structure and *exact counts* for data items to be generated.
-    *   Example:
+    *   Keys like `title`, `shortText`, `longText`, `number` directly map to top-level arrays in your output.
+    *   Keys found under an `others` sub-object in `instances` (e.g., `instances.others.misc`) should also become **top-level keys** in your output JSON, mapping to arrays.
+    *   Example `instances`:
         ```json
         {
-            "shortText": 2, // Means "shortText" array needs 2 string items
-            "longText": 2,  // Means "longText" array needs 2 string items
-            "number": 2,    // Means "number" array needs 2 number/string items
-            "title": 1,     // Means "title" array needs 1 string item
+            "title": 1,
+            "shortText": 2,
+            "longText": 2,
+            "number": 2,
             "others": {
-                "misc": 1   // Means "others.misc" array needs 1 string item
+                "misc": 1,      // This "misc" will be a top-level key in the output
+                "keywords": 3   // This "keywords" will be a top-level key in the output
             }
         }
         ```
@@ -32,98 +35,46 @@ Your goal is to meticulously analyze the `template` and `instances` schema, and 
 
 3.  **`data` (JSON Object):**
     *   This is your sole source of information. It has the following top-level keys:
-        *   **`candidateInfo`**: Structured information extracted directly from a candidate's resume.
-            *   `contact`:
-                *   `name`: Extracted name (not inferred from email/links).
-                *   `dob`: Date of birth in `YYYY-MM-DD` format, or blank.
-                *   `email`, `phone`: Contact details.
-                *   `linkedIn`, `github`: URLs, extracted as-is.
-            *   `education`: Array of objects, each with:
-                *   `institute`: Name of the institution.
-                *   `startDate`, `endDate`: In `YYYY-MM-DD` format; `endDate` is blank if "present" or ongoing.
-                *   `score`: Original score metric (e.g., "3.5 CGPA", "90%").
-            *   `experience`: Array of objects, each with:
-                *   `title`, `company`: Job title and company name.
-                *   `type`: Numerical (0: Job, 1: Internship, 2: Other).
-                *   `startDate`, `endDate`: In `YYYY-MM-DD` format; `endDate` is blank if "present" or ongoing.
-                *   `skillsUsed`: Array of skill strings, potentially inferred from descriptions if AI was confident.
-            *   `projects`: Array of objects, each with:
-                *   `title`, `desc` (long-form text supported), `url`.
-                *   `skillsUsed`: Array of skill strings, potentially inferred.
-            *   `skills`: Array of objects, each with:
-                *   `title`: Skill name.
-                *   `experience`: Numerical value (e.g., years).
-                *   `proficiency`: Numerical (0: Beginner, 1: Intermediate, 2: Master), possibly inferred based on project/experience context or action words.
-            *   *Note on `candidateInfo`*: Fields may be blank if not found or ambiguous. Some inference (e.g., skills from descriptions) was applied during its creation.
-
-        *   **`posting`**: Details of a job posting.
-            *   `title`: The job title (e.g., "Software Engineer").
-            *   `about`: The full job description text.
-            *   `company`: The company name.
-            *   `companyURL`: URL for the company.
-
-        *   **`resumeContent`**: Content specifically generated and tailored to the `posting` by analyzing `candidateInfo`.
-            *   **Narrative Sections** (e.g., `Summary`, `Skills` (as a text string), `Experience` (as a text string highlighting achievements), `Projects` (as a text string), `Education` (as a text string)):
-                *   These are *newly crafted text elements*, not direct copies from `candidateInfo`.
-                *   They are designed to be *non-redundant* with `candidateInfo` and highlight relevance to the `posting`.
-                *   These keys might be absent if no relevant new content could be generated.
-                *   Content is concise, uses keywords from `posting.about`, and may quantify achievements.
-            *   **Ranked Lists:**
-                *   `rankedSkills`: Array of skill objects (copied from `candidateInfo.skills` but with `title`, `experience`, `proficiency`), selected (typically 6-10) and ranked by relevance to `posting.about`.
-                *   `rankedExperience`: Array of experience objects (copied from `candidateInfo.experience` with all its fields), selected (typically 4-6) and ranked by relevance.
-                *   `rankedProjects`: Array of project objects (copied from `candidateInfo.projects` with all its fields), selected (typically 4-6) and ranked by relevance.
-            *   *Note on `resumeContent`*: This content is highly targeted. The narrative sections aim to fill gaps or provide a specific angle not present in the raw `candidateInfo`.
-
-        *   **`customInstructions`**: (May be empty) User-provided text that influenced the generation of `resumeContent` (e.g., desired tone, skills to emphasize).
+        *   **`candidateInfo`**: Structured information extracted directly from a candidate's resume (contact, education, raw experience, projects, skills).
+        *   **`posting`**: Details of a job posting (`title`, `about` description, `company`).
+        *   **`resumeContent`**: Content tailored to the job posting (`Summary`, `Skills` string, `rankedSkills`, `rankedExperience`, `rankedProjects`).
+        *   **`customInstructions`**: User-provided text that influenced `resumeContent`.
+    *   *(Detailed sub-structure of `candidateInfo`, `posting`, `resumeContent` as previously specified in our conversation – e.g., `candidateInfo.contact.name`, `resumeContent.rankedSkills[i].title`, etc. remains the same).*
 
 **Output Requirements:**
 
-Your output **must** be a single JSON object with the following top-level keys: `title`, `shortText`, `longText`, `number`, and `others`.
-
-*   Each key (e.g., `shortText`) must map to an **array**.
-*   The **length** of each array *must exactly match* the count specified in the input `instances` object for that key.
-*   For keys under `others` (e.g., `misc`), the value for `misc` will also be an array, with its length defined by `instances.others.misc`.
+Your output **must** be a single JSON object.
+*   It will contain top-level keys like `title`, `shortText`, `longText`, `number`, AND any keys defined under `instances.others` (e.g., `misc`, `keywords` from the example above).
+*   Each of these keys must map to an **array**.
+*   The **length** of each array *must exactly match* the count specified in the input `instances` object for that key (e.g., if `instances.shortText` is 2, your `shortText` array must contain 2 items; if `instances.others.misc` is 1, your top-level `misc` array must contain 1 item).
 
 **Content Generation Guidelines:**
 
-1.  **Strict Adherence to `instances` Counts:** For each category (e.g., `shortText`, `longText`, `misc`), you must generate exactly the number of items specified in `instances`.
+1.  **Strict Adherence to `instances` Counts:** For each category (e.g., `shortText`, `longText`, `misc`, `keywords`), you must generate exactly the number of items specified in `instances`.
 2.  **Source Data:** All content *must* be derived or selected from the provided `data` object. Do not invent information.
 3.  **Content Selection for Each Slot:**
-    *   For each slot in each array (e.g., `title[0]`, `shortText[0]`, `shortText[1]`, `misc[0]`), select or compose a suitable piece of information from the `data` object.
+    *   For each slot in each array (e.g., `title[0]`, `shortText[0]`, `misc[0]`), select or compose a suitable piece of information from the `data` object.
     *   **Contextual Hints & Potential Sources:**
-        *   `title`: Typically a main document title.
-            *   *Primary sources:* `posting.title`.
-            *   *Secondary sources:* Synthesize from `resumeContent.Summary` or the overall job context if `posting.title` is unsuitable.
-        *   `shortText`: Brief textual elements.
-            *   *Primary sources:* `candidateInfo.contact` fields (name, email, phone), individual skill titles from `resumeContent.rankedSkills` (e.g., `rankedSkills[i].title`) or `candidateInfo.skills` (e.g., `skills[i].title`), short experience titles (`candidateInfo.experience[i].title`), short project titles (`candidateInfo.projects[i].title`).
-            *   *Secondary sources:* Dates, key terms from `posting.about`, concise facts.
-        *   `longText`: More substantial blocks of text.
-            *   *Primary sources:* `resumeContent.Summary` (if available and suitable), excerpts from `posting.about`, descriptions from `candidateInfo.projects[i].desc` or `resumeContent.rankedProjects[i].desc`, detailed descriptions that might be part of `resumeContent.Experience` or `resumeContent.Projects` (if these are text blocks).
-            *   *Secondary sources:* Longer, more descriptive elements from `candidateInfo.experience` if not better used elsewhere.
-        *   `number`: Numerical data (convert to strings if the template expects strings).
-            *   *Primary sources:* `candidateInfo.education[i].score` (extract numerical part if needed), `candidateInfo.skills[i].experience` (years), numerical data explicitly mentioned in `posting.about` or `resumeContent`.
-            *   *Secondary sources:* Calculated values (e.g., duration of experience if start/end dates are present), counts of items (e.g., number of projects listed).
-        *   `others.misc`: A list of miscellaneous items, often suitable for bullet points.
-            *   *Primary sources:* Curated list of skill titles from `resumeContent.rankedSkills` or `candidateInfo.skills` (especially those not used as `shortText`), technical tools mentioned in `posting.about` or `candidateInfo`, specific keywords.
-            *   *Secondary sources:* Short project names, quantifiable achievements if not used elsewhere.
-    *   **Prioritize Relevance and Variety:** Try to select distinct and relevant pieces of information for different items within the same array. Use the template structure (e.g., `shortText[0]` vs `shortText[1]`) as a weak hint for distinct content if possible.
+        *   `title`: Typically a main document title. (Sources: `posting.title`, `resumeContent.Summary`).
+        *   `shortText`: Brief textual elements. (Sources: `candidateInfo.contact` fields, skill titles from `resumeContent.rankedSkills` or `candidateInfo.skills`, short experience/project titles).
+        *   `longText`: Substantial blocks of text. (Sources: `resumeContent.Summary`, `posting.about` excerpts, project/experience descriptions).
+        *   `number`: Numerical data. (Sources: `candidateInfo.education[i].score`, `candidateInfo.skills[i].experience`, numbers in descriptions).
+        *   For keys derived from `instances.others` (e.g., `misc`, `keywords`): These often represent lists of items suitable for bullet points or collections.
+            *   *Primary sources:* Curated lists of skill titles, technical tools, keywords from `posting.about` or `candidateInfo`, short project names, specific achievements.
+    *   **Prioritize Relevance and Variety:** Try to select distinct and relevant pieces of information for different items within the same array.
 4.  **Handling Insufficient Data:** If you cannot find enough distinct or relevant pieces of information from the `data` object to fill all the required slots for a category (as per `instances`), you **must** use an empty string (`""`) for the unfilled slots. The array must still be the required length.
-5.  **`{{newLine}}` for Line Breaks in Content:** If any string value you generate needs to represent multiple lines of text in the final LaTeX output (e.g., a multi-line paragraph for a `longText` item), you **must** use the literal string `{{newLine}}` within that data string to indicate a line break. Do NOT use `\n` for this purpose within the string values.
-    *   Example: `longText[0]` could be `"This is the first sentence.{{newLine}}This is the second sentence."`
-6.  **Output Format:**
-    *   The output must be a single, valid JSON object.
+5.  **Newline Handling in Content:** The string values you generate for keys like `shortText`, `longText`, `misc`, etc., should be plain text. If the source text contains natural newlines (`\n`), they should be preserved in the output string. Do not add any special newline tokens into the data strings. The Jinja-LaTeX template itself will be responsible for how these strings are rendered and how newlines are handled in the final LaTeX document.
+6.  **Output Format Example (based on example `instances` above):**
+    ```json
+    {
+        "title": ["Generated Title"],
+        "shortText": ["Generated Short Text 1", "Generated Short Text 2"],
+        "longText": ["Generated Long Text 1", "Generated Long Text 2"],
+        "number": ["123", "4.5"],
+        "misc": ["Generated Misc Item 1"],
+        "keywords": ["Keyword A", "Keyword B", "Keyword C"]
+    }
+    ```
     *   Do not include any explanations or text outside of this JSON object.
-    *   The structure should be:
-        ```json
-        {
-            "title": ["String for title 0", ...],
-            "shortText": ["String for shortText 0", "String for shortText 1", ...],
-            "longText": ["String for longText 0", ...],
-            "number": ["Number/String for number 0", ...],
-            "others": {
-                "misc": ["String for misc 0", "String for misc 1", ...]
-            }
-        }
-        ```
 
-Your primary objective is to accurately populate the data structure defined by `instances` using relevant content from `data`, ensuring correct formatting and handling of multi-line text with `{{newLine}}`. Your understanding of how the `data` object was constructed will be crucial for making intelligent selections.
+Your primary objective is to accurately populate the flattened data structure defined by `instances` using relevant content from `data`, ensuring correct formatting. Your understanding of how the `data` object was constructed will be crucial for making intelligent selections.
